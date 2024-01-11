@@ -18,6 +18,10 @@ public class Team {
         this.losses = 0;
     }
 
+    public Team(String name) {
+        this.name = name;
+    }
+
     public void addScore(boolean won){
         if(won){
             points+=3;
