@@ -31,19 +31,16 @@ public class FirebaseController {
         db = FirebaseDatabase.getInstance();
     }
 
-    public static void add(Score score) {
+    public static void addTeam(Team team, Tournament tournament) {
         DatabaseReference reference = db.getReference(URL);
-        reference.child(score.getName()).setValueAsync(score);
+        reference.child("tournaments/"+tournament.getName()+"teams").setValueAsync(team);
     }
-    //meow
-    /*public static void add(List<Score> scores) {
-        HashMap<String, Score> map = new HashMap<>();
-        for (int i = 0; i < scores.size(); i++) {
-            map.put(scores.get(i).getName(), scores.get(i));
-        }
+
+    public static void addTournament(Tournament tournament) {
         DatabaseReference reference = db.getReference(URL);
-        reference.setValueAsync(map);
-    }*/
+        reference.child("tournaments").setValueAsync(tournament);
+    }
+
 
     public static void getTournaments() {
         DatabaseReference reference = db.getReference(URL);
