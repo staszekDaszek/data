@@ -33,7 +33,7 @@ public class FirebaseController {
 
     public static void addTeam(Team team, Tournament tournament) {
         DatabaseReference reference = db.getReference(URL);
-        reference.child("tournaments/"+tournament.getName()+"/teams").setValueAsync(team);
+        reference.child("tournaments/"+tournament.getName()+"/teams/"+team.getName()).setValueAsync(team);
     }
 
     public static void addTournament(Tournament tournament) {
