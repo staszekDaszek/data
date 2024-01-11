@@ -71,6 +71,7 @@ public class Main extends Application {
                 tournament.setName(tournamentName.getText());
                 tournament.setTeams(tempTeam);
                 tournamentList.add(tournament);
+                FirebaseController.addTournament(tournament);
             }
         });
 
@@ -209,7 +210,13 @@ public class Main extends Application {
         tournaments.setLayoutY(100);
         tournaments.setLayoutX(300);
 
-        root.getChildren().addAll(tournaments);
+        Button menu = new Button("Menu");
+        menu.setFont(Font.font(20));
+        menu.setLayoutX(600);
+        menu.setLayoutY(400);
+        menu.setOnAction(event -> menuWindow());
+
+        root.getChildren().addAll(tournaments, menu);
         scene = new Scene(root, 1000, 600);
         stage.setScene(scene);
         stage.show();
