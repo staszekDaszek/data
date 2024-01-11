@@ -8,14 +8,24 @@ public class Team {
     private int points;
     private int wins;
     private int losses;
-    private int score;
+
 
     public Team(List<Player> players, String name, int points, int wins, int losses) {
         this.players = players;
         this.name = name;
-        this.points = wins * 3 + losses;
+        this.points = 0;
         this.wins = 0;
         this.losses = 0;
+    }
+
+    public void addScore(boolean won){
+        if(won){
+            points+=3;
+            wins++;
+        }
+        else{
+            losses++;
+        }
     }
 
     public List<Player> getPlayers() {
@@ -56,13 +66,5 @@ public class Team {
 
     public void setLosses(int losses) {
         this.losses = losses;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 }

@@ -1,5 +1,8 @@
 package com.company;
 
+import com.google.firebase.database.utilities.Pair;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -24,13 +27,22 @@ public class Tournament {
     }
 
     public void play() {
+        HashMap<Pair<Team, Team>, Integer> teamsPlay = new HashMap<>();
         for (Team team1 : teams) {
             for (Team team2 : teams) {
-                Random random = new Random();
-                int team1Win = random.nextInt(2);
-                int team1Score = (team1Win == 1) ? 3 : random.nextInt(3);
-                int team2Score = (team1Win == 0) ? 3 : random.nextInt(3);
-
+                if(!teamsPlay.containsKey(new Pair<>(team1, team2)) && !teamsPlay.containsKey(new Pair<>(team2, team1))){
+                    teamsPlay.put(new Pair<>(team1, team2), 0);
+                    Random random = new Random();
+                    int team1Win = random.nextInt(2);
+                    if(team1Win == 1){
+                        team1.addScore(true);
+                        team2.addScore(false);
+                    }
+                    else{
+                        team1.addScore(false);
+                        team2.addScore(true);
+                    }
+                }
             }
         }
     }
