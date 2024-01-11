@@ -36,15 +36,7 @@ public class Main extends Application {
 
         Button add = new Button("Add");
         add.setFont(Font.font(20));
-        add.setOnAction(event -> {
-            if (! name.getText().isEmpty() &&! score.getText().isEmpty()){
-                Score score1 = new Score();
-                score1.setName(name.getText());
-                score1.setPoints(Integer.parseInt(score.getText()));
-                FirebaseController.add(score1);
-               
-            }
-        });
+
 
         HBox hBox = new HBox();
         hBox.setSpacing(100);

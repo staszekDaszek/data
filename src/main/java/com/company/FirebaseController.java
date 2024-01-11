@@ -45,14 +45,14 @@ public class FirebaseController {
         reference.setValueAsync(map);
     }*/
 
-    public static void getScores() {
+    public static void getTournaments() {
         DatabaseReference reference = db.getReference(URL);
         reference.orderByKey().addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Score score = dataSnapshot.getValue(Score.class);
-                System.out.println("received: " + score);
+                Tournament tournament = dataSnapshot.getValue(Tournament.class);
+                System.out.println("received: " + tournament);
 
             }
 
