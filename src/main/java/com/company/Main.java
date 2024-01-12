@@ -29,6 +29,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FirebaseController.init();
+        FirebaseController.getTournaments();
 
         menuWindow();
 
@@ -200,6 +201,7 @@ public class Main extends Application {
 
     public static void previousTournamentsWindow() {
         root = new AnchorPane();
+        FirebaseController.getTournaments();
         ComboBox<String> tournaments = new ComboBox<>();
         for (Tournament tournament: tournamentList){
             tournaments.getItems().add(tournament.getName());
