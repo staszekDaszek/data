@@ -34,4 +34,13 @@ public class Player {
     public void setPosition(String position) {
         this.position = position;
     }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", position='" + position + '\'' +
+                '}';
+    }
 }
