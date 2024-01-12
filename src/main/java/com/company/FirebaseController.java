@@ -8,6 +8,8 @@ import com.google.firebase.database.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,6 +17,8 @@ public class FirebaseController {
     private static final String FILE_NAME = "./dylanek-f3c0a-firebase-adminsdk-nqmpx-009809ccd0.json";
     private static final String DATABASE_NAME = "https://dylanek-f3c0a-default-rtdb.europe-west1.firebasedatabase.app/";
     private static final String URL = "/scores";
+
+    private static final String URL1 = "/";
 
     private static FirebaseDatabase db;
 
@@ -39,6 +43,7 @@ public class FirebaseController {
     public static void addTournament(Tournament tournament) {
         DatabaseReference reference = db.getReference(URL);
         reference.child("tournaments").push().setValueAsync(tournament);
+        System.out.println("lmao");
     }
 
 
@@ -49,9 +54,13 @@ public class FirebaseController {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Tournament tournament = dataSnapshot.getValue(Tournament.class);
-                System.out.println("received: " + tournament);
-
+                ArrayList<Tournament> fake = new ArrayList<>();
+                for (DataSnapshot data:dataSnapshot.getChildren()) {
+                    Tournament tournament = data.getValue(Tournament.class);
+                    fake.add(tournament);
+                }
+                Main.tournamentList = fake;
+                System.out.println(Main.tournamentList.toString());
             }
 
             @Override

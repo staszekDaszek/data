@@ -12,9 +12,7 @@ public class Tournament {
     private List<Team> teams;
 
 
-    public Tournament() {
-        this.teams = new ArrayList<>();
-    }
+    public Tournament() {}
 
     public String getName() {
         return name;
@@ -60,5 +58,13 @@ public class Tournament {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Tournament{" +
+                "name='" + name + '\'' +
+                ", teams=" + teams +
+                '}';
     }
 }

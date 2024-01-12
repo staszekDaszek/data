@@ -9,6 +9,8 @@ public class Team {
     private int wins;
     private int losses;
 
+    public Team(){}
+
 
     public Team(List<Player> players, String name, int points, int wins, int losses) {
         this.players = players;
@@ -70,5 +72,16 @@ public class Team {
 
     public void setLosses(int losses) {
         this.losses = losses;
+    }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "players=" + players +
+                ", name='" + name + '\'' +
+                ", points=" + points +
+                ", wins=" + wins +
+                ", losses=" + losses +
+                '}';
     }
 }
