@@ -136,6 +136,21 @@ public class Main extends Application {
             }
         });
 
+        Button randomize = new Button("Randomize");
+        randomize.setFont(Font.font(20));
+        randomize.setOnAction(event -> {
+            if(! teamName.getText().isEmpty()){
+                boolean isDuplicated = false;
+                for (Team team: teamList){
+                    if (team.getName().equals(teamName.getText())){
+                        isDuplicated = true;
+                    }
+                }
+                Team team = Team.randomize(teamName.getText());
+                teamList.add(Team.randomize(teamName.getText()));
+            }
+        });
+
         Button addTeam = new Button("Create team");
         addTeam.setFont(Font.font(20));
         addTeam.setOnAction(event -> {
@@ -154,9 +169,9 @@ public class Main extends Application {
             }
         });
 
-        HBox hBox = new HBox(teamName, players, addPlayer,  addTeam);
-        hBox.setSpacing(40);
-        hBox.setLayoutX(100);
+        HBox hBox = new HBox(teamName, players, addPlayer, randomize, addTeam);
+        hBox.setSpacing(30);
+        hBox.setLayoutX(25);
         hBox.setLayoutY(100);
 
         root.getChildren().addAll(menu, back, hBox);
