@@ -1,16 +1,18 @@
 package com.company;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main extends Application {
@@ -147,7 +149,8 @@ public class Main extends Application {
                     }
                 }
                 Team team = Team.randomize(teamName.getText());
-                teamList.add(Team.randomize(teamName.getText()));
+                System.out.println(team);
+                teamList.add(team);
             }
         });
 
@@ -216,26 +219,67 @@ public class Main extends Application {
 
     public static void previousTournamentsWindow() {
         root = new AnchorPane();
+
+        TableView tableView = new TableView();
+        root.getChildren().add(tableView);
+
+        TableColumn nameColumn = new TableColumn("Name");
+        TableColumn pointsColumn = new TableColumn("Points");
+        TableColumn winsColumn = new TableColumn("Wins");
+        TableColumn lossesColumn = new TableColumn("Losses");
+        tableView.getColumns().addAll(nameColumn, pointsColumn, winsColumn, lossesColumn);
+
+        PropertyValueFactory<Team, String> factory1 = new PropertyValueFactory<>("Name");
+        PropertyValueFactory<Team, Integer> factory2 = new PropertyValueFactory<>("Points");
+        PropertyValueFactory<Team, Integer> factory3 = new PropertyValueFactory<>("Wins");
+        PropertyValueFactory<Team, Integer> factory4 = new PropertyValueFactory<>("Losses");
+
+        nameColumn.setCellValueFactory(factory1);
+        pointsColumn.setCellValueFactory(factory2);
+        winsColumn.setCellValueFactory(factory3);
+        lossesColumn.setCellValueFactory(factory4);
+
         FirebaseController.getTournaments();
-        ComboBox<String> tournaments = new ComboBox<>();
+        ComboBox<Tournament> tournaments = new ComboBox<>();
         for (Tournament tournament: tournamentList){
-            tournaments.getItems().add(tournament.getName());
+            tournaments.getItems().add(FXCollections
+                    .observableArrayList());
         }
         tournaments.setPrefWidth(300);
         tournaments.setPrefHeight(50);
         tournaments.setPromptText("Previous tournaments");
-        tournaments.setLayoutY(100);
+        tournaments.setLayoutY(50);
         tournaments.setLayoutX(300);
+
+        tournaments.setOnAction(event -> {
+            Tournament temp = (Tournament) (tournaments.getSelectionModel().getSelectedItem());
+            List<Animal> tempList = Arrays.asList(temp.getAnimals());
+            ObservableList tempObs =  FXCollections.observableArrayList(tempList);
+            tableView.setItems(tempObs);
+        });
+
+
 
         Button menu = new Button("Menu");
         menu.setFont(Font.font(20));
         menu.setLayoutX(600);
-        menu.setLayoutY(400);
+        menu.setLayoutY(800);
         menu.setOnAction(event -> menuWindow());
 
         root.getChildren().addAll(tournaments, menu);
         scene = new Scene(root, 1000, 600);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void showSelectedPrevious(Tournament tournament){
+
+
+
+
+        List<Team> teams = tournament.getTeams();
+        ObservableList tempObs = FXCollections.observableArrayList(teams);
+        tableView.setItems(tempObs);
+
     }
 }
