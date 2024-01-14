@@ -32,6 +32,8 @@ public class Team {
         this.name = name;
     }
 
+    public Team() {}
+
     public void addScore(boolean won) {
         if (won) {
             points += 3;

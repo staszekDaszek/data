@@ -12,8 +12,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Main extends Application {
     static List<Team> teamList = new ArrayList<>();
@@ -31,11 +31,24 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FirebaseController.init();
-
+        FirebaseController.getTournaments();
+        Thread.sleep(3000);
+        for (int i = 0; i < tournamentList.size(); i++) {
+            Tournament tournament = tournamentList.get(i);
+            for (int j = 0; j < tournament.getTeams().size(); j++) {
+                if(!teamList.contains(tournament.getTeams().get(j))){
+                    teamList.add(tournament.getTeams().get(j));
+                }
+            }
+        }
         menuWindow();
 
     }
     public static void newTournamentWindow() {
+        for (Team team:
+             teamList) {
+            System.out.println(team.getName());
+        }
         root = new AnchorPane();
         List<Team> tempTeam = new ArrayList<>();
 
@@ -43,10 +56,12 @@ public class Main extends Application {
         tournamentName.setPromptText("Name of the tournament");
         tournamentName.setFont(Font.font(20));
 
-        ComboBox<String> teams = new ComboBox<>();
+        ObservableList<String> data = FXCollections.observableArrayList();
         for (Team team : teamList) {
-            teams.getItems().add(team.getName());
+            data.add(team.getName());
         }
+        ComboBox<String> teams = new ComboBox<>(data);
+
         teams.setPromptText("teams");
         teams.setPrefHeight(43);
         teams.setPrefWidth(200);
@@ -68,7 +83,9 @@ public class Main extends Application {
         addTournament.setLayoutX(300);
         addTournament.setLayoutY(400);
         addTournament.setOnAction(event -> {
+            System.out.println("100");
             if (! tournamentName.getText().isEmpty() && ! tempTeam.isEmpty()){
+                System.out.println("200");
                 Tournament tournament = new Tournament();
                 tournament.setName(tournamentName.getText());
                 tournament.setTeams(tempTeam);
@@ -147,9 +164,10 @@ public class Main extends Application {
                         isDuplicated = true;
                     }
                 }
+                if(!isDuplicated){
                 Team team = Team.randomize(teamName.getText());
                 System.out.println(team);
-                teamList.add(team);
+                teamList.add(team);}
             }
         });
 
@@ -185,17 +203,6 @@ public class Main extends Application {
     public static void menuWindow() {
         root = new AnchorPane();
 
-        Team gsw = new Team("GSW");
-        teamList.add(gsw);
-        Player player = new Player("Kobe Bryant", 23, "shooting guard");
-        Player player1 = new Player("Micheal Jordan", 33, "shooting guard");
-        Player player2 = new Player("Steph Curry", 31, "point guard");
-        Player player3 = new Player("Tracy McGrady", 29, "small forward");
-        playerList.add(player3);
-        playerList.add(player);
-        playerList.add(player2);
-        playerList.add(player1);
-
         Button createTournament = new Button("Create new tournament");
         createTournament.setFont(Font.font(30));
         createTournament.setLayoutX(340);
@@ -218,6 +225,7 @@ public class Main extends Application {
 
     public static void previousTournamentsWindow() {
         root = new AnchorPane();
+        AtomicReference<Tournament> tour = new AtomicReference<>(new Tournament());
 
         TableView tableView = new TableView();
         root.getChildren().add(tableView);
@@ -228,6 +236,7 @@ public class Main extends Application {
         TableColumn lossesColumn = new TableColumn("Losses");
         tableView.getColumns().addAll(nameColumn, pointsColumn, winsColumn, lossesColumn);
 
+
         PropertyValueFactory<Team, String> factory1 = new PropertyValueFactory<>("Name");
         PropertyValueFactory<Team, Integer> factory2 = new PropertyValueFactory<>("Points");
         PropertyValueFactory<Team, Integer> factory3 = new PropertyValueFactory<>("Wins");
@@ -237,13 +246,15 @@ public class Main extends Application {
         pointsColumn.setCellValueFactory(factory2);
         winsColumn.setCellValueFactory(factory3);
         lossesColumn.setCellValueFactory(factory4);
+        pointsColumn.setSortType(TableColumn.SortType.DESCENDING);
+        tableView.getSortOrder().add(pointsColumn);
+        tableView.sort();
 
-        FirebaseController.getTournaments();
-        ComboBox<Tournament> tournaments = new ComboBox<>();
-        for (Tournament tournament: tournamentList){
-            tournaments.getItems().add(FXCollections
-                    .observableArrayList());
+        ObservableList<String> data = FXCollections.observableArrayList();
+        for (Tournament tournament: tournamentList) {
+            data.add(tournament.getName());
         }
+        ComboBox<String> tournaments = new ComboBox<>(data);
         tournaments.setPrefWidth(300);
         tournaments.setPrefHeight(50);
         tournaments.setPromptText("Previous tournaments");
@@ -251,21 +262,89 @@ public class Main extends Application {
         tournaments.setLayoutX(300);
 
         tournaments.setOnAction(event -> {
-            Tournament temp = (Tournament) (tournaments.getSelectionModel().getSelectedItem());
-            List<Animal> tempList = Arrays.asList(temp.getAnimals());
-            ObservableList tempObs =  FXCollections.observableArrayList(tempList);
-            tableView.setItems(tempObs);
+            tour.set(new Tournament());
+            String name = tournaments.getValue();
+            for (int i = 0; i <tournamentList.size(); i++) {
+                if(name.equals(tournamentList.get(i).getName())){
+                    tour.set(tournamentList.get(i));
+                }
+            }
+            tableView.getItems().clear();
+            for (int i = 0; i < tour.get().getTeams().size(); i++) {
+                Team team = tour.get().getTeams().get(i);
+                tableView.getItems().add(team);
+            }
+            //Tournament temp = (Tournament) (tournaments.getSelectionModel().getSelectedItem());
+           // List<Animal> tempList = Arrays.asList(temp.getAnimals());
+           // ObservableList tempObs =  FXCollections.observableArrayList(tempList);
+          //  tableView.setItems(tempObs);
         });
 
 
 
         Button menu = new Button("Menu");
         menu.setFont(Font.font(20));
-        menu.setLayoutX(600);
-        menu.setLayoutY(800);
+        menu.setLayoutX(100);
+        menu.setLayoutY(550);
         menu.setOnAction(event -> menuWindow());
 
-        root.getChildren().addAll(tournaments, menu);
+        Button play = new Button("Play This Tournament");
+        play.setFont(Font.font(20));
+        play.setLayoutX(300);
+        play.setLayoutY(550);
+        play.setOnAction(event -> {
+            for (int i = 0; i < tour.get().getTeams().size(); i++) {
+               Team team = tour.get().getTeams().get(i);
+                for (int j = i+1; j < tour.get().getTeams().size(); j++) {
+                    if(i!=j){
+                        Team enemy = tour.get().getTeams().get(j);
+                        int result = Math.random() > 0.5 ? 1 : 2;
+                        if(result == 1){
+                            enemy.setLosses(enemy.getLosses()+1);
+                            enemy.setPoints(enemy.getPoints()+1);
+                            team.setWins(team.getWins()+1);
+                            team.setPoints(team.getPoints()+3);
+                        }
+                        else{
+                            enemy.setWins(enemy.getWins()+1);
+                            enemy.setPoints(enemy.getPoints()+3);
+                            team.setLosses(team.getLosses()+1);
+                            team.setPoints(team.getPoints()+1);
+                        }
+                    }
+
+                }
+            }
+            tableView.getItems().clear();
+            for (int i = 0; i < tour.get().getTeams().size(); i++) {
+                Team team = tour.get().getTeams().get(i);
+                tableView.getItems().add(team);
+            }
+            tableView.sort();
+
+        });
+
+        Button reset = new Button("Reset");
+        reset.setFont(Font.font(20));
+        reset.setLayoutX(600);
+        reset.setLayoutY(550);
+        reset.setOnAction(event -> {
+            for (int i = 0; i < tour.get().getTeams().size(); i++) {
+                Team team = tour.get().getTeams().get(i);
+                team.setWins(0);
+                team.setPoints(0);
+                team.setLosses(0);
+            }
+            tableView.getItems().clear();
+            for (int i = 0; i < tour.get().getTeams().size(); i++) {
+                Team team = tour.get().getTeams().get(i);
+                tableView.getItems().add(team);
+            }
+            tableView.sort();
+
+        });
+
+        root.getChildren().addAll(tournaments, menu, play, reset);
         scene = new Scene(root, 1000, 600);
         stage.setScene(scene);
         stage.show();
@@ -278,7 +357,7 @@ public class Main extends Application {
 
         List<Team> teams = tournament.getTeams();
         ObservableList tempObs = FXCollections.observableArrayList(teams);
-        tableView.setItems(tempObs);
+        //tableView.setItems(tempObs);
 
     }
 }

@@ -11,6 +11,8 @@ public class Player {
         this.position = position;
     }
 
+    public Player() {}
+
     public String getName() {
         return name;
     }
