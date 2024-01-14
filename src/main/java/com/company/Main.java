@@ -293,28 +293,7 @@ public class Main extends Application {
         play.setLayoutX(300);
         play.setLayoutY(550);
         play.setOnAction(event -> {
-            for (int i = 0; i < tour.get().getTeams().size(); i++) {
-               Team team = tour.get().getTeams().get(i);
-                for (int j = i+1; j < tour.get().getTeams().size(); j++) {
-                    if(i!=j){
-                        Team enemy = tour.get().getTeams().get(j);
-                        int result = Math.random() > 0.5 ? 1 : 2;
-                        if(result == 1){
-                            enemy.setLosses(enemy.getLosses()+1);
-                            enemy.setPoints(enemy.getPoints()+1);
-                            team.setWins(team.getWins()+1);
-                            team.setPoints(team.getPoints()+3);
-                        }
-                        else{
-                            enemy.setWins(enemy.getWins()+1);
-                            enemy.setPoints(enemy.getPoints()+3);
-                            team.setLosses(team.getLosses()+1);
-                            team.setPoints(team.getPoints()+1);
-                        }
-                    }
-
-                }
-            }
+            tour.get().play();
             tableView.getItems().clear();
             for (int i = 0; i < tour.get().getTeams().size(); i++) {
                 Team team = tour.get().getTeams().get(i);

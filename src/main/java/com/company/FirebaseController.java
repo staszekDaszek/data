@@ -14,8 +14,6 @@ public class FirebaseController {
     private static final String DATABASE_NAME = "https://dylanek-f3c0a-default-rtdb.europe-west1.firebasedatabase.app/";
     private static final String URL = "/scores";
 
-    private static final String URL1 = "/";
-
     private static FirebaseDatabase db;
 
     public static void init() throws IOException {
@@ -42,11 +40,6 @@ public class FirebaseController {
         System.out.println("lmao");
     }
 
-    public static void updateTournament(String name){
-        DatabaseReference reference = db.getReference(URL);
-
-    }
-
     public static void getTournaments() {
         DatabaseReference reference = db.getReference(URL);
         System.out.println("lol");
@@ -61,7 +54,7 @@ public class FirebaseController {
                     fake.add(tournament);
                 }
                 Main.tournamentList = fake;
-                System.out.println(Main.tournamentList.toString() + " 1000");
+                System.out.println(Main.tournamentList + " 1000");
             }
 
             @Override
