@@ -1,6 +1,10 @@
 package com.company;
 
+import javafx.util.Pair;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class Tournament {
     private String name;
