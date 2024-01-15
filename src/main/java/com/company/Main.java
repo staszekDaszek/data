@@ -352,10 +352,6 @@ public class Main extends Application {
                 tableView.getItems().add(team);
             }
             tableView.sort();
-            //Tournament temp = (Tournament) (tournaments.getSelectionModel().getSelectedItem());
-           // List<Animal> tempList = Arrays.asList(temp.getAnimals());
-           // ObservableList tempObs =  FXCollections.observableArrayList(tempList);
-          //  tableView.setItems(tempObs);
         });
 
 
@@ -384,38 +380,18 @@ public class Main extends Application {
         play.setLayoutX(300);
         play.setLayoutY(550);
         play.setOnAction(event -> {
+            if(tour.get().getTeams() != null){
+                tour.get().play();
+                tableView.getItems().clear();
                 for (int i = 0; i < tour.get().getTeams().size(); i++) {
                     Team team = tour.get().getTeams().get(i);
-                    for (int j = i + 1; j < tour.get().getTeams().size(); j++) {
-                        if (i != j) {
-                            Team enemy = tour.get().getTeams().get(j);
-                            int result = Math.random() > 0.5 ? 1 : 2;
-                            if (result == 1) {
-                                enemy.setLosses(enemy.getLosses() + 1);
-                                enemy.setPoints(enemy.getPoints() + 1);
-                                team.setWins(team.getWins() + 1);
-                                team.setPoints(team.getPoints() + 3);
-                            } else {
-                                enemy.setWins(enemy.getWins() + 1);
-                                enemy.setPoints(enemy.getPoints() + 3);
-                                team.setLosses(team.getLosses() + 1);
-                                team.setPoints(team.getPoints() + 1);
-                            }
-                        }
-
-                    }
+                    tableView.getItems().add(team);
                 }
-            tableView.getItems().clear();
-            for (int i = 0; i < tour.get().getTeams().size(); i++) {
-                Team team = tour.get().getTeams().get(i);
-                tableView.getItems().add(team);
+                tableView.sort();
+                System.out.println(tour.get().getName());
+                List<Team> newTeams = tour.get().getTeams();
+                FirebaseController.updateTournament(tour.get().getName(), newTeams);
             }
-            tableView.sort();
-            System.out.println(tour.get().getName());
-            List<Team> newTeams = tour.get().getTeams();
-            FirebaseController.updateTournament(tour.get().getName(), newTeams);
-
-
         });
 
         Button reset = new Button("Reset");
@@ -423,37 +399,27 @@ public class Main extends Application {
         reset.setLayoutX(600);
         reset.setLayoutY(550);
         reset.setOnAction(event -> {
-            for (int i = 0; i < tour.get().getTeams().size(); i++) {
-                Team team = tour.get().getTeams().get(i);
-                team.setWins(0);
-                team.setPoints(0);
-                team.setLosses(0);
+            if(tour.get().getTeams() != null){
+                for (int i = 0; i < tour.get().getTeams().size(); i++) {
+                    Team team = tour.get().getTeams().get(i);
+                    team.setWins(0);
+                    team.setPoints(0);
+                    team.setLosses(0);
+                }
+                tableView.getItems().clear();
+                for (int i = 0; i < tour.get().getTeams().size(); i++) {
+                    Team team = tour.get().getTeams().get(i);
+                    tableView.getItems().add(team);
+                }
+                tableView.sort();
+                List<Team> newTeams = tour.get().getTeams();
+                FirebaseController.updateTournament(tour.get().getName(), newTeams);
             }
-            tableView.getItems().clear();
-            for (int i = 0; i < tour.get().getTeams().size(); i++) {
-                Team team = tour.get().getTeams().get(i);
-                tableView.getItems().add(team);
-            }
-            tableView.sort();
-            List<Team> newTeams = tour.get().getTeams();
-            FirebaseController.updateTournament(tour.get().getName(), newTeams);
-
         });
 
         root.getChildren().addAll(tournaments, menu, play, reset,delete);
         scene = new Scene(root, 1000, 600);
         stage.setScene(scene);
         stage.show();
-    }
-
-    public void showSelectedPrevious(Tournament tournament){
-
-
-
-
-        List<Team> teams = tournament.getTeams();
-        ObservableList tempObs = FXCollections.observableArrayList(teams);
-        //tableView.setItems(tempObs);
-
     }
 }
