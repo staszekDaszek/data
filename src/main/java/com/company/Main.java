@@ -17,6 +17,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Main extends Application {
     static List<Team> teamList = new ArrayList<>();
+
+    static List<String> teamNameList = new ArrayList<>();
     static List<Player> playerList = new ArrayList<>();
     static List<Tournament> tournamentList = new ArrayList<>();
     static AnchorPane root;
@@ -36,15 +38,86 @@ public class Main extends Application {
         for (int i = 0; i < tournamentList.size(); i++) {
             Tournament tournament = tournamentList.get(i);
             for (int j = 0; j < tournament.getTeams().size(); j++) {
-                if(!teamList.contains(tournament.getTeams().get(j))){
+                boolean check = true;
+                for (int k = 0; k < teamList.size(); k++) {
+                    if(tournament.getTeams().get(j).getName().equals(teamList.get(k).getName())){
+                        check = false;
+                    }
+                }
+                if(check){
                     teamList.add(tournament.getTeams().get(j));
                 }
             }
         }
+        for (Team team :
+             teamList) {
+            team.setWins(0);
+            team.setLosses(0);
+            team.setPoints(0);
+        }
+        for (int i = 0; i < teamList.size(); i++) {
+            Team team = teamList.get(i);
+            for (int j = 0; j < team.getPlayers().size(); j++) {
+                boolean check = true;
+                for (int k = 0; k < playerList.size(); k++) {
+                    if(team.getPlayers().get(j).getName().equals(playerList.get(k).getName())){
+                        check = false;
+                    }
+                }
+                if(check){
+                    playerList.add(team.getPlayers().get(j));
+                }
+            }
+        }
+        System.out.println(teamList.size());
         menuWindow();
 
     }
+
+    public static void updateTeamsAndPlayers(){
+        for (int i = 0; i < tournamentList.size(); i++) {
+            Tournament tournament = tournamentList.get(i);
+            for (int j = 0; j < tournament.getTeams().size(); j++) {
+                boolean check = true;
+                for (int k = 0; k < teamList.size(); k++) {
+                    if(tournament.getTeams().get(j).getName().equals(teamList.get(k).getName())){
+                        check = false;
+                    }
+                }
+                if(check){
+                    teamList.add(tournament.getTeams().get(j));
+                }
+            }
+        }
+        for (Team team :
+                teamList) {
+            team.setWins(0);
+            team.setLosses(0);
+            team.setPoints(0);
+        }
+        for (int i = 0; i < teamList.size(); i++) {
+            Team team = teamList.get(i);
+            for (int j = 0; j < team.getPlayers().size(); j++) {
+                boolean check = true;
+                for (int k = 0; k < playerList.size(); k++) {
+                    if(team.getPlayers().get(j).getName().equals(playerList.get(k).getName())){
+                        check = false;
+                    }
+                }
+                if(check){
+                    playerList.add(team.getPlayers().get(j));
+                }
+            }
+        }
+        System.out.println(teamList.size());
+    }
     public static void newTournamentWindow() {
+        FirebaseController.getTournaments();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         for (Team team:
              teamList) {
             System.out.println(team.getName());
@@ -85,12 +158,19 @@ public class Main extends Application {
         addTournament.setOnAction(event -> {
             System.out.println("100");
             if (! tournamentName.getText().isEmpty() && ! tempTeam.isEmpty()){
+                boolean check = true;
+                for (Tournament tournament : tournamentList) {
+                    if (tournament.getName().equals(tournamentName.getText())) {
+                        check = false;
+                    }
+                }
+                if(check){
                 System.out.println("200");
                 Tournament tournament = new Tournament();
                 tournament.setName(tournamentName.getText());
                 tournament.setTeams(tempTeam);
                 tournamentList.add(tournament);
-                FirebaseController.addTournament(tournament);
+                FirebaseController.addTournament(tournament);}
             }
         });
 
@@ -117,8 +197,16 @@ public class Main extends Application {
     }
 
     public static void newTeamWindow() {
+        FirebaseController.getTournaments();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        AtomicReference<Team> sampleTeam = new AtomicReference<>(new Team());
+        updateTeamsAndPlayers();
         root = new AnchorPane();
-        List<Player> tempPlayers = new ArrayList<>();
+        final List<Player>[] tempPlayers = new List[]{new ArrayList<>()};
 
         Button menu = new Button("Menu");
         menu.setFont(Font.font(20));
@@ -136,25 +224,10 @@ public class Main extends Application {
         teamName.setPromptText("Name");
         teamName.setFont(Font.font(20));
 
-        ComboBox<String> players = new ComboBox<>();
-        players.setPromptText("Players");
-        for (Player player: playerList){
-            players.getItems().add(player.getName());
-        }
-        players.setPrefHeight(43);
-        players.setPrefWidth(200);
 
-        Button addPlayer = new Button("Add player");
-        addPlayer.setFont(Font.font(20));
-        addPlayer.setOnAction(event -> {
-            for (Player player: playerList){
-                if (player.getName().equals(players.getValue()) && ! tempPlayers.contains(player)){
-                    tempPlayers.add(player);
-                }
-            }
-        });
 
-        Button randomize = new Button("Randomize");
+
+        Button randomize = new Button("Generate the team");
         randomize.setFont(Font.font(20));
         randomize.setOnAction(event -> {
             if(! teamName.getText().isEmpty()){
@@ -164,32 +237,21 @@ public class Main extends Application {
                         isDuplicated = true;
                     }
                 }
-                if(!isDuplicated){
+                if(!isDuplicated && tempPlayers[0].size()<6){
                 Team team = Team.randomize(teamName.getText());
-                System.out.println(team);
-                teamList.add(team);}
+                tempPlayers[0] = team.getPlayers();
+                System.out.println("nice");
+                sampleTeam.set(team);
+                System.out.println(sampleTeam.get());
+                teamList.add(sampleTeam.get());
+                }
+                tempPlayers[0] = new ArrayList<>();
             }
         });
 
-        Button addTeam = new Button("Create team");
-        addTeam.setFont(Font.font(20));
-        addTeam.setOnAction(event -> {
-            boolean isDuplicated = false;
-            if (! teamName.getText().isEmpty() && ! tempPlayers.isEmpty()){
-                for (Team team: teamList){
-                    if (team.getName().equals(teamName.getText())){
-                        isDuplicated = true;
-                    }
-                }
-                if (!isDuplicated){
-                    Team team = new Team(teamName.getText());
-                    team.setPlayers(tempPlayers);
-                    teamList.add(team);
-                }
-            }
-        });
 
-        HBox hBox = new HBox(teamName, players, addPlayer, randomize, addTeam);
+
+        HBox hBox = new HBox(teamName, randomize);
         hBox.setSpacing(30);
         hBox.setLayoutX(25);
         hBox.setLayoutY(100);
@@ -201,6 +263,13 @@ public class Main extends Application {
         stage.show();
     }
     public static void menuWindow() {
+        FirebaseController.getTournaments();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        updateTeamsAndPlayers();
         root = new AnchorPane();
 
         Button createTournament = new Button("Create new tournament");
@@ -210,7 +279,7 @@ public class Main extends Application {
 
         createTournament.setOnAction(event -> newTournamentWindow());
 
-        Button previousTournaments = new Button("Previous Tournaments");
+        Button previousTournaments = new Button("Ongoing Tournaments");
         previousTournaments.setFont(Font.font(30));
         previousTournaments.setLayoutX(340);
         previousTournaments.setLayoutY(200);
@@ -224,8 +293,17 @@ public class Main extends Application {
     }
 
     public static void previousTournamentsWindow() {
+        FirebaseController.getTournaments();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        updateTeamsAndPlayers();
+        System.out.println(playerList.size()+" 123");
         root = new AnchorPane();
         AtomicReference<Tournament> tour = new AtomicReference<>(new Tournament());
+        AtomicReference<Tournament> safeguard = tour;
 
         TableView tableView = new TableView();
         root.getChildren().add(tableView);
@@ -274,6 +352,7 @@ public class Main extends Application {
                 Team team = tour.get().getTeams().get(i);
                 tableView.getItems().add(team);
             }
+            tableView.sort();
             //Tournament temp = (Tournament) (tournaments.getSelectionModel().getSelectedItem());
            // List<Animal> tempList = Arrays.asList(temp.getAnimals());
            // ObservableList tempObs =  FXCollections.observableArrayList(tempList);
@@ -288,39 +367,53 @@ public class Main extends Application {
         menu.setLayoutY(550);
         menu.setOnAction(event -> menuWindow());
 
-        Button play = new Button("Play This Tournament");
+        Button delete = new Button("Delete this Tournament");
+        delete.setFont(Font.font(20));
+        delete.setLayoutX(500);
+        delete.setLayoutY(200);
+        delete.setOnAction(event -> {
+            FirebaseController.deleteTournament(tournaments.getValue());
+            tableView.getItems().clear();
+            tournaments.getItems().remove(tour.get().getName());
+            tour.set(new Tournament());
+        });
+
+        Button play = new Button("Play Next Round");
         play.setFont(Font.font(20));
         play.setLayoutX(300);
         play.setLayoutY(550);
         play.setOnAction(event -> {
-            for (int i = 0; i < tour.get().getTeams().size(); i++) {
-               Team team = tour.get().getTeams().get(i);
-                for (int j = i+1; j < tour.get().getTeams().size(); j++) {
-                    if(i!=j){
-                        Team enemy = tour.get().getTeams().get(j);
-                        int result = Math.random() > 0.5 ? 1 : 2;
-                        if(result == 1){
-                            enemy.setLosses(enemy.getLosses()+1);
-                            enemy.setPoints(enemy.getPoints()+1);
-                            team.setWins(team.getWins()+1);
-                            team.setPoints(team.getPoints()+3);
+                for (int i = 0; i < tour.get().getTeams().size(); i++) {
+                    Team team = tour.get().getTeams().get(i);
+                    for (int j = i + 1; j < tour.get().getTeams().size(); j++) {
+                        if (i != j) {
+                            Team enemy = tour.get().getTeams().get(j);
+                            int result = Math.random() > 0.5 ? 1 : 2;
+                            if (result == 1) {
+                                enemy.setLosses(enemy.getLosses() + 1);
+                                enemy.setPoints(enemy.getPoints() + 1);
+                                team.setWins(team.getWins() + 1);
+                                team.setPoints(team.getPoints() + 3);
+                            } else {
+                                enemy.setWins(enemy.getWins() + 1);
+                                enemy.setPoints(enemy.getPoints() + 3);
+                                team.setLosses(team.getLosses() + 1);
+                                team.setPoints(team.getPoints() + 1);
+                            }
                         }
-                        else{
-                            enemy.setWins(enemy.getWins()+1);
-                            enemy.setPoints(enemy.getPoints()+3);
-                            team.setLosses(team.getLosses()+1);
-                            team.setPoints(team.getPoints()+1);
-                        }
-                    }
 
+                    }
                 }
-            }
             tableView.getItems().clear();
             for (int i = 0; i < tour.get().getTeams().size(); i++) {
                 Team team = tour.get().getTeams().get(i);
                 tableView.getItems().add(team);
             }
             tableView.sort();
+            System.out.println(tour.get().getName());
+            List<Team> newTeams = tour.get().getTeams();
+            FirebaseController.updateTournament(tour.get().getName(), newTeams);
+
 
         });
 
@@ -341,10 +434,12 @@ public class Main extends Application {
                 tableView.getItems().add(team);
             }
             tableView.sort();
+            List<Team> newTeams = tour.get().getTeams();
+            FirebaseController.updateTournament(tour.get().getName(), newTeams);
 
         });
 
-        root.getChildren().addAll(tournaments, menu, play, reset);
+        root.getChildren().addAll(tournaments, menu, play, reset,delete);
         scene = new Scene(root, 1000, 600);
         stage.setScene(scene);
         stage.show();

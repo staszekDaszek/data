@@ -1,0 +1,5 @@
+add comboboxes to visualise changes and choices
+fix bug with empty tournaments
+show players of teams
+fix bug with player counts
+add extras

@@ -1,6 +1,5 @@
 package com.company;
 
-import java.util.ArrayList;
 import com.google.firebase.database.utilities.Pair;
 
 import java.util.HashMap;
@@ -11,7 +10,7 @@ public class Tournament {
     private String name;
     private List<Team> teams;
 
-
+    private String id;
     public Tournament() {}
 
     public String getName() {
