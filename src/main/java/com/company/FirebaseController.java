@@ -8,16 +8,11 @@ import com.google.firebase.database.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class FirebaseController {
     private static final String FILE_NAME = "./dylanek-f3c0a-firebase-adminsdk-nqmpx-009809ccd0.json";
     private static final String DATABASE_NAME = "https://dylanek-f3c0a-default-rtdb.europe-west1.firebasedatabase.app/";
     private static final String URL = "/scores";
-
-    private static final String URL1 = "/";
 
     private static FirebaseDatabase db;
 

@@ -17,8 +17,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Main extends Application {
     static List<Team> teamList = new ArrayList<>();
-
-    static List<String> teamNameList = new ArrayList<>();
     static List<Player> playerList = new ArrayList<>();
     static List<Tournament> tournamentList = new ArrayList<>();
     static AnchorPane root;

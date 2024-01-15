@@ -1,16 +1,12 @@
 package com.company;
 
-import com.google.firebase.database.utilities.Pair;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class Tournament {
     private String name;
     private List<Team> teams;
 
-    private String id;
+
     public Tournament() {}
 
     public String getName() {
@@ -27,10 +23,6 @@ public class Tournament {
 
     public void setTeams(List<Team> teams) {
         this.teams = teams;
-    }
-
-    public Tournament(String name) {
-        this.name = name;
     }
 
     public void addTeam(Team team){

@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,8 +32,6 @@ public class Team {
     public Team(String name) {
         this.name = name;
     }
-
-    public Team() {}
 
     public void addScore(boolean won) {
         if (won) {
@@ -88,9 +87,9 @@ public class Team {
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             int nameIndex = radom.nextInt(NAMES_NUMBER + 1);
-            Scanner scanner = null;
+            Scanner scanner;
             try {
-                scanner = new Scanner(new FileInputStream(namesTxt), "UTF-8");
+                scanner = new Scanner(new FileInputStream(namesTxt), StandardCharsets.UTF_8);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -100,9 +99,9 @@ public class Team {
                 if(j == nameIndex - 1){
                     int age = radom.nextInt(MAX_AGE);
                     nameIndex = radom.nextInt(POSITIONS_NUMBER + 1);
-                    Scanner scanner1 = null;
+                    Scanner scanner1;
                     try {
-                        scanner1 = new Scanner(new FileInputStream(positionsTxt), "UTF-8");
+                        scanner1 = new Scanner(new FileInputStream(positionsTxt), StandardCharsets.UTF_8);
                     } catch (FileNotFoundException e) {
                         throw new RuntimeException(e);
                     }
