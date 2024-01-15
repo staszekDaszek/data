@@ -42,6 +42,8 @@ public class Team {
         }
     }
 
+    public Team(){}
+
     public List<Player> getPlayers() {
         return players;
     }
