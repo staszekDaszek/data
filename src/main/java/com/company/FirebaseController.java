@@ -105,9 +105,17 @@ public class FirebaseController {
                 System.out.println("XD");
                 ArrayList<Tournament> fake = new ArrayList<>();
                 for (DataSnapshot data:dataSnapshot.getChildren()) {
-                    Tournament tournament = data.getValue(Tournament.class);
+                    System.out.println(data.getValue().toString());
+                    Tournament tournament = new Tournament();
+                    try {
+                        tournament = data.getValue(Tournament.class);
+                    }catch (RuntimeException e){
+                        System.out.println(e.getMessage());
+                    }
+                    System.out.println(tournament.toString());
                     fake.add(tournament);
                 }
+                System.out.println("7");
                 Main.tournamentList = fake;
                 System.out.println(Main.tournamentList.toString() + " 1000");
             }

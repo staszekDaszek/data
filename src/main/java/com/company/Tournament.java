@@ -1,25 +1,20 @@
 package com.company;
 
-import javafx.util.Pair;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class Tournament {
-    private String name;
     private List<Team> teams;
+
+    private String name;
 
 
     public Tournament() {}
 
-    public String getName() {
-        return name;
+    public Tournament(String name, List<Team> teams){
+        this.name = name;
+        this.teams = teams;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public List<Team> getTeams() {
         return teams;
@@ -29,12 +24,20 @@ public class Tournament {
         this.teams = teams;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void addTeam(Team team){
         if(!teams.contains(team)) teams.add(team);
         else System.out.println("This team has already been added");
     }
 
-    public void play() {
+    /*public void play() {
         HashMap<Pair<Team, Team>, Integer> teamsPlay = new HashMap<>();
         for (Team team1 : teams) {
             for (Team team2 : teams) {
@@ -53,7 +56,7 @@ public class Tournament {
                 }
             }
         }
-    }
+    }*/
 
     @Override
     public String toString() {

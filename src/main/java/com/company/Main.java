@@ -31,6 +31,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FirebaseController.init();
+        Thread.sleep(1000);
         FirebaseController.getTournaments();
         Thread.sleep(3000);
         for (int i = 0; i < tournamentList.size(); i++) {
@@ -374,6 +375,8 @@ public class Main extends Application {
             tableView.getItems().clear();
             tournaments.getItems().remove(tour.get().getName());
             tour.set(new Tournament());
+            tournamentList.remove(tour);
+            updateTeamsAndPlayers();
         });
 
         Button play = new Button("Play Next Round");
