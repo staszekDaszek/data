@@ -5,7 +5,8 @@ public class Playerplayer extends Player {
     public Playerplayer(String tourKey, Player player){
         super(player.getName(), player.getAge(), player.getPosition());
         this.pointsInTour = player.getPointsInTour();
-        this.points = this.pointsInTour.get(tourKey);
+        if(!pointsInTour.containsKey(tourKey)) this.points = 0;
+        else this.points = this.pointsInTour.get(tourKey);
     }
 
     public int getPoints() {
