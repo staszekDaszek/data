@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -23,6 +24,8 @@ public class Main extends Application {
     static AnchorPane root;
     static Scene scene;
     static Stage stage = new Stage();
+    static HashMap<Tournament, String> tourKeyMap = new HashMap<>();
+
 
 
     public static void loadingScreen() throws InterruptedException {

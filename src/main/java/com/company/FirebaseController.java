@@ -112,6 +112,7 @@ public class FirebaseController {
                     }catch (RuntimeException e){
                         System.out.println(e.getMessage());
                     }
+                    Main.tourKeyMap.put(tournament, data.getKey().toString());
                     System.out.println(tournament.toString());
                     fake.add(tournament);
                 }

@@ -6,11 +6,13 @@ public class Tournament {
     private List<Team> teams;
 
     private String name;
+    private static final int MAX_POINTS_NUMBER = 200;
 
 
-    public Tournament() {}
+    public Tournament() {
+    }
 
-    public Tournament(String name, List<Team> teams){
+    public Tournament(String name, List<Team> teams) {
         this.name = name;
         this.teams = teams;
     }
@@ -32,27 +34,41 @@ public class Tournament {
         this.name = name;
     }
 
-    public void addTeam(Team team){
-        if(!teams.contains(team)) teams.add(team);
+    public void addTeam(Team team) {
+        if (!teams.contains(team)) teams.add(team);
         else System.out.println("This team has already been added");
     }
 
-    public void play(){
+    public void play() {
         for (int i = 0; i < getTeams().size(); i++) {
             Team team = getTeams().get(i);
             for (int j = i + 1; j < getTeams().size(); j++) {
                 if (i != j) {
                     Team enemy = getTeams().get(j);
-                    int result = Math.random() > 0.5 ? 1 : 2;
-                    if (result == 1) {
-                        team.addScore(true);
-                        enemy.addScore(false);
-                    } else {
-                        team.addScore(false);
-                        enemy.addScore(true);
+                    int teamScore = 0, enemyScore = 0;
+                    while(teamScore == enemyScore){
+                        teamScore = (int) (Math.round(Math.random() * MAX_POINTS_NUMBER));
+                        enemyScore = (int) (Math.round(Math.random() * MAX_POINTS_NUMBER));
+                    }
+                    team.addScore((teamScore > enemyScore), Main.tourKeyMap.get(this), teamScore);
+                    enemy.addScore((teamScore < enemyScore), Main.tourKeyMap.get(this), enemyScore);
+                    for (Player player : team.getPlayers()) {
+                        if(teamScore > 0){
+                            int playerScore = (int)(Math.round(Math.random() * teamScore));
+                            player.addPoints(playerScore, Main.tourKeyMap.get(this));
+                            teamScore -= playerScore;
+                        }
+                        else break;
+                    }
+                    for (Player player : enemy.getPlayers()) {
+                        if(teamScore > 0){
+                            int playerScore = (int)(Math.round(Math.random() * teamScore));
+                            player.addPoints(playerScore, Main.tourKeyMap.get(this));
+                            teamScore -= playerScore;
+                        }
+                        else break;
                     }
                 }
-
             }
         }
     }
