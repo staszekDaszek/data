@@ -3,10 +3,7 @@ package com.company;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Team {
     private List<Player> players;
@@ -14,11 +11,14 @@ public class Team {
     private int points;
     private int wins;
     private int losses;
+    private int score;
     private static final int NAMES_NUMBER = 2943;
     private static final String namesTxt = "names.txt";
     private static final int MAX_AGE = 150;
     private static final String positionsTxt = "positions.txt";
     private static final int POSITIONS_NUMBER = 73380;
+    private static final int PLAYER_IN_TEAM = 5;
+    private HashMap<String, Integer> pointsInTour = new HashMap<>();
 
 
     public Team(List<Player> players, String name) {
@@ -33,12 +33,18 @@ public class Team {
         this.name = name;
     }
 
-    public void addScore(boolean won) {
+    public void addScore(boolean won, String key, int score) {
         if (won) {
             points += 3;
             wins++;
         } else {
             losses++;
+        }
+        if(pointsInTour.containsKey(key)){
+            pointsInTour.put(key, pointsInTour.get(key) + score);
+        }
+        else{
+            pointsInTour.put(key, score);
         }
     }
 
@@ -87,7 +93,7 @@ public class Team {
     public static Team randomize(String name) {
         Random radom = new Random();
         List<Player> players = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < PLAYER_IN_TEAM; i++) {
             int nameIndex = radom.nextInt(NAMES_NUMBER + 1);
             Scanner scanner;
             try {
