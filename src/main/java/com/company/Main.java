@@ -9,6 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -28,6 +29,21 @@ public class Main extends Application {
 
 
 
+    public static void loadingScreen() throws InterruptedException {
+        System.out.println("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
+        AnchorPane rootLoad = new AnchorPane();
+        Scene sceneLoad;
+        sceneLoad = new Scene(rootLoad, 1000, 600);
+        Text text = new Text(500,300, "Loading");
+        text.setFont(Font.font(50));
+        rootLoad.getChildren().add(text);
+        stage.setScene(sceneLoad);
+        stage.show();
+    }
+
+
+
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -37,7 +53,8 @@ public class Main extends Application {
         FirebaseController.init();
         Thread.sleep(1000);
         FirebaseController.getTournaments();
-        Thread.sleep(3000);
+        Thread.sleep(1000);
+        loadingScreen();
         for (int i = 0; i < tournamentList.size(); i++) {
             Tournament tournament = tournamentList.get(i);
             for (int j = 0; j < tournament.getTeams().size(); j++) {
@@ -116,11 +133,6 @@ public class Main extends Application {
     }
     public static void newTournamentWindow() {
         FirebaseController.getTournaments();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         for (Team team:
              teamList) {
             System.out.println(team.getName());
@@ -268,6 +280,11 @@ public class Main extends Application {
     public static void menuWindow() {
         FirebaseController.getTournaments();
         try {
+            loadingScreen();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -294,6 +311,7 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
 
     public static void previousTournamentsWindow() {
         FirebaseController.getTournaments();
