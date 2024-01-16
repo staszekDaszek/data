@@ -6,7 +6,7 @@ public class Player {
     private String name;
     private int age;
     private String position;
-    private HashMap<String, Integer> pointsInTour = new HashMap<>();
+    public HashMap<String, Integer> pointsInTour = new HashMap<>();
 
     public Player(String name, int age, String position) {
         this.name = name;
@@ -46,6 +46,10 @@ public class Player {
         else{
             pointsInTour.put(key, points);
         }
+    }
+
+    public HashMap<String, Integer> getPointsInTour() {
+        return pointsInTour;
     }
 
     @Override

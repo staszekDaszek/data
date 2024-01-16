@@ -56,6 +56,7 @@ public class Tournament {
                         if(teamScore > 0){
                             int playerScore = (int)(Math.round(Math.random() * teamScore));
                             player.addPoints(playerScore, Main.tourKeyMap.get(this));
+                            System.out.println("trtetet " + player.getPointsInTour().toString());
                             teamScore -= playerScore;
                         }
                         else break;

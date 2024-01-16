@@ -463,21 +463,24 @@ public class Main extends Application {
         TableColumn ageCol = new TableColumn("Age");
         TableColumn positionCol = new TableColumn("Position");
         TableColumn pointsCol = new TableColumn("Points");
+        tableView.getColumns().addAll(nameCol, ageCol, positionCol, pointsCol);
 
-        PropertyValueFactory<Player, String> factory1 = new PropertyValueFactory<>("Name");
-        PropertyValueFactory<Player, Integer> factory2 = new PropertyValueFactory<>("Age");
-        PropertyValueFactory<Player, String> factory3 = new PropertyValueFactory<>("Position");
-        PropertyValueFactory<Player, > factory4 = new PropertyValueFactory<>("Points");
+        PropertyValueFactory<Playerplayer, String> factory1 = new PropertyValueFactory<>("Name");
+        PropertyValueFactory<Playerplayer, Integer> factory2 = new PropertyValueFactory<>("Age");
+        PropertyValueFactory<Playerplayer, String> factory3 = new PropertyValueFactory<>("Position");
+        PropertyValueFactory<Playerplayer, Integer> factory4 = new PropertyValueFactory<>("Points");
+
 
         tableView.getItems().addAll(factory1, factory2, factory3, factory4);
+        tableView.getItems().clear();
 
         nameCol.setCellValueFactory(factory1);
         ageCol.setCellValueFactory(factory2);
         positionCol.setCellValueFactory(factory3);
         pointsCol.setCellValueFactory(factory4);
-
         for (int i = 0; i < team.getPlayers().size(); i++) {
-            tableView.getItems().add(team.getPlayers().get(i));
+            Playerplayer player = new Playerplayer(Main.tourKeyMap.get(tournamnet), team.getPlayers().get(i));
+            tableView.getItems().add(player);
         }
 
 
