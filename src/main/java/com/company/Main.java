@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Main extends Application {
@@ -322,6 +323,7 @@ public class Main extends Application {
         PropertyValueFactory<Team, Integer> factory3 = new PropertyValueFactory<>("Wins");
         PropertyValueFactory<Team, Integer> factory4 = new PropertyValueFactory<>("Losses");
 
+
         nameColumn.setCellValueFactory(factory1);
         pointsColumn.setCellValueFactory(factory2);
         winsColumn.setCellValueFactory(factory3);
@@ -330,16 +332,21 @@ public class Main extends Application {
         tableView.getSortOrder().add(pointsColumn);
         tableView.sort();
 
+        tableView.setOnMouseClicked(event -> {
+            playerWindow((Team) tableView.getSelectionModel().getSelectedItem(), tour.get());
+
+        });
+
         ObservableList<String> data = FXCollections.observableArrayList();
         for (Tournament tournament: tournamentList) {
             data.add(tournament.getName());
         }
         ComboBox<String> tournaments = new ComboBox<>(data);
-        tournaments.setPrefWidth(300);
+        tournaments.setPrefWidth(200);
         tournaments.setPrefHeight(50);
         tournaments.setPromptText("Previous tournaments");
         tournaments.setLayoutY(50);
-        tournaments.setLayoutX(300);
+        tournaments.setLayoutX(500);
 
         tournaments.setOnAction(event -> {
             tour.set(new Tournament());
@@ -420,7 +427,50 @@ public class Main extends Application {
             }
         });
 
+
+
         root.getChildren().addAll(tournaments, menu, play, reset,delete);
+        scene = new Scene(root, 1000, 600);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void playerWindow(Team team, Tournament tournamnet) {
+        root = new AnchorPane();
+
+        TableView tableView = new TableView();
+        root.getChildren().add(tableView);
+
+        TableColumn nameCol = new TableColumn("Name");
+        TableColumn ageCol = new TableColumn("Age");
+        TableColumn positionCol = new TableColumn("Position");
+        TableColumn pointsCol = new TableColumn("Points");
+
+        PropertyValueFactory<Player, String> factory1 = new PropertyValueFactory<>("Name");
+        PropertyValueFactory<Player, Integer> factory2 = new PropertyValueFactory<>("Age");
+        PropertyValueFactory<Player, String> factory3 = new PropertyValueFactory<>("Position");
+        PropertyValueFactory<Player, > factory4 = new PropertyValueFactory<>("Points");
+
+        tableView.getItems().addAll(factory1, factory2, factory3, factory4);
+
+        nameCol.setCellValueFactory(factory1);
+        ageCol.setCellValueFactory(factory2);
+        positionCol.setCellValueFactory(factory3);
+        pointsCol.setCellValueFactory(factory4);
+
+        for (int i = 0; i < team.getPlayers().size(); i++) {
+            tableView.getItems().add(team.getPlayers().get(i));
+        }
+
+
+        pointsCol.setSortType(TableColumn.SortType.DESCENDING);
+        tableView.getSortOrder().add(pointsCol);
+        tableView.sort();
+
+
+
+
+
         scene = new Scene(root, 1000, 600);
         stage.setScene(scene);
         stage.show();
