@@ -489,7 +489,19 @@ public class Main extends Application {
         tableView.sort();
 
 
+        Button menu = new Button("Menu");
+        menu.setFont(Font.font(20));
+        menu.setLayoutX(300);
+        menu.setLayoutY(550);
+        menu.setOnAction(event -> menuWindow());
 
+        Button back = new Button("Back");
+        back.setFont(Font.font(20));
+        back.setLayoutX(600);
+        back.setLayoutY(550);
+        back.setOnAction(event -> previousTournamentsWindow());
+
+        root.getChildren().addAll(menu, back);
 
 
         scene = new Scene(root, 1000, 600);

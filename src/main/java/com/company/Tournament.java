@@ -62,10 +62,10 @@ public class Tournament {
                         else break;
                     }
                     for (Player player : enemy.getPlayers()) {
-                        if(teamScore > 0){
-                            int playerScore = (int)(Math.round(Math.random() * teamScore));
+                        if(enemyScore > 0){
+                            int playerScore = (int)(Math.round(Math.random() * enemyScore));
                             player.addPoints(playerScore, Main.tourKeyMap.get(this));
-                            teamScore -= playerScore;
+                            enemyScore -= playerScore;
                         }
                         else break;
                     }
